@@ -4,12 +4,12 @@
 
 | Field | Value |
 |-------|-------|
-| **Document ID** | ARC-001-REQ-v1.1 |
+| **Document ID** | ARC-001-REQ-v1.2 |
 | **Document Type** | Business and Technical Requirements |
 | **Project** | Cabinet Office GenAI Platform (Project 001) |
 | **Classification** | OFFICIAL-SENSITIVE |
 | **Status** | DRAFT |
-| **Version** | 1.1 |
+| **Version** | 1.2 |
 | **Created Date** | 2025-11-02 |
 | **Last Modified** | 2025-11-03 |
 | **Review Date** | 2025-12-02 |
@@ -24,6 +24,7 @@
 |---------|------|--------|---------|-------------|---------------|
 | 1.0 | 2025-11-02 | ArcKit AI | Initial creation from `/arckit.requirements` command | [PENDING] | [PENDING] |
 | 1.1 | 2025-11-03 | ArcKit AI | Added AI Red Teaming requirements (NFR-SEC-008 to NFR-SEC-012) from AI Playbook assessment GAP-06 | [PENDING] | [PENDING] |
+| 1.2 | 2025-11-03 | ArcKit AI | Added gap-closing requirements (NFR-C-006 to NFR-C-011, NFR-TRAIN-001, NFR-PROC-001) for AI Playbook gaps (BLOCKING-01, BLOCKING-02, GAP-01 to GAP-05, GAP-07) | [PENDING] | [PENDING] |
 
 ## Document Purpose
 
@@ -1666,6 +1667,673 @@ The Cabinet Office has been tasked by Ministers to deliver a **centralized, secu
 **Aligns With**:
 - Architecture Principle 11: "Algorithmic Transparency"
 - Stakeholder Goal G-3: "Publish ATRS within 6 months"
+
+---
+
+#### NFR-C-006: Data Protection Impact Assessment (DPIA) Completion
+
+**Requirement**: Complete and obtain ICO approval for Data Protection Impact Assessment (DPIA) before Private Beta launch.
+
+**Rationale**: BLOCKING-01 from AI Playbook assessment (ARC-001-AIPB-v1.1). DPIA is MANDATORY for HIGH-RISK AI systems processing OFFICIAL-SENSITIVE data. Cannot deploy to Private Beta without ICO DPIA approval (legal requirement under UK GDPR Article 35).
+
+**DPIA Scope**:
+- **Personal Data Processing**: User authentication data, query history, uploaded documents, audit logs
+- **AI-Specific Risks**: Hallucinations (false information), bias (discrimination), data leaks (cross-tenant), model inversion
+- **Data Subject Rights**: Access, deletion, portability, rectification (STORY-064 Sprint 4)
+- **Data Sharing**: Cross-departmental data isolation, third-party AI vendor (Azure OpenAI/AWS Bedrock/Anthropic)
+- **Data Retention**: User data (30 days post-closure), audit logs (7 years), AI training data (2 years, anonymized after 6 months)
+
+**DPIA Process**:
+1. **Screening** (Sprint 4): Determine if DPIA required (HIGH-RISK AI = YES, MANDATORY)
+2. **Consultation** (Month 3): ICO pre-consultation (early engagement recommended)
+3. **Assessment** (Sprint 5): Complete DPIA using ICO template, identify risks, propose mitigations
+4. **ICO Submission** (Sprint 5): Submit DPIA to ICO for review
+5. **ICO Approval** (Month 6 target): Obtain ICO approval before Private Beta gate
+6. **Publication** (Post-approval): Publish redacted DPIA on Cabinet Office website (transparency)
+
+**DPIA Contents**:
+- Description of data processing (what data, why, how, who has access)
+- Necessity and proportionality (why AI is necessary, alternatives considered)
+- Risks to data subjects (hallucinations, bias, data leaks, unauthorized access)
+- Measures to address risks (technical: encryption, RLS; organizational: human review, training)
+- Consultation with stakeholders (DPO, data subjects, pilot departments)
+- Sign-off from DPO and Senior Responsible Owner
+
+**Success Criteria**:
+- DPIA completed using ICO template (Sprint 5)
+- ICO pre-consultation completed (Month 3)
+- ICO approval obtained before Private Beta (Month 6)
+- DPIA reviewed annually or when significant changes occur (new AI model, new data sources)
+- Redacted DPIA published on Cabinet Office website (post-approval)
+
+**Timeline**:
+- Sprint 4 (Month 2-3): DPIA screening, ICO pre-consultation
+- Sprint 5 (Month 3-4): DPIA completion and ICO submission
+- Month 6: ICO approval (Private Beta gate dependency)
+
+**Owner**: Privacy Lead + Cabinet Office DPO
+
+**Priority**: CRITICAL (NON-NEGOTIABLE, BLOCKING for Private Beta)
+
+**Aligns With**:
+- AI Playbook Principle 2: "Lawful and Ethical Use" (7/10 score, -3 for incomplete DPIA)
+- Architecture Principle 5: "Privacy by Design"
+- Stakeholder Goal G-3: "Achieve AI Playbook compliance > 90%"
+- NFR-C-001: GDPR and Data Protection Act 2018 Compliance
+
+**Traceability**:
+- **Addresses**: AI Playbook BLOCKING-01 (DPIA Not Completed - CRITICAL risk)
+- **Stakeholder**: ICO Chief Technology Officer (regulatory authority)
+- **Gate Dependency**: Private Beta launch (Month 6) - cannot proceed without ICO DPIA approval
+
+---
+
+#### NFR-C-007: Equality Impact Assessment (EqIA) Completion
+
+**Requirement**: Complete Equality Impact Assessment (EqIA) to identify and mitigate discrimination risks across protected characteristics before Private Beta launch.
+
+**Rationale**: GAP-01 from AI Playbook assessment (ARC-001-AIPB-v1.1). EqIA is MANDATORY for HIGH-RISK AI systems that may impact protected characteristics under Equality Act 2010. Failure to complete EqIA may result in discriminatory AI outputs (age, gender, race, disability, religion, sexual orientation).
+
+**Protected Characteristics** (Equality Act 2010):
+1. Age (9 categories: <18, 18-24, 25-34, 35-44, 45-54, 55-64, 65-74, 75-84, 85+)
+2. Disability (physical, mental health, learning disabilities, sensory impairments)
+3. Gender reassignment (transgender, non-binary)
+4. Marriage and civil partnership
+5. Pregnancy and maternity
+6. Race (ethnicity, national origin, skin color)
+7. Religion or belief (Christianity, Islam, Judaism, Hinduism, Sikhism, Buddhism, no religion)
+8. Sex (male, female, non-binary)
+9. Sexual orientation (heterosexual, lesbian, gay, bisexual, other)
+
+**EqIA Scope**:
+- **Direct Discrimination**: Does AI treat users differently based on protected characteristics? (e.g., different advice for men vs women)
+- **Indirect Discrimination**: Does AI disproportionately disadvantage certain groups? (e.g., AI trained only on male-authored policy documents)
+- **Harassment**: Does AI generate outputs that create hostile environment? (e.g., biased language, stereotypes)
+- **Victimization**: Does AI penalize users who raise equality concerns?
+
+**EqIA Process**:
+1. **Screening** (Sprint 7): Determine if EqIA required (HIGH-RISK AI with user-facing outputs = YES)
+2. **Data Collection** (Sprint 7-8): Gather demographics of pilot users (Home Office, HMRC, DHSC), review training data sources
+3. **Impact Analysis** (Sprint 8): Identify potential discriminatory impacts per protected characteristic
+4. **Mitigation Planning** (Sprint 8): Define actions to eliminate/reduce discrimination (bias testing, fairness metrics, diverse training data)
+5. **Consultation** (Sprint 8): Engage Equality & Diversity Lead, pilot department diversity officers, affected groups
+6. **Sign-off** (Sprint 8): Obtain SRO approval before Private Beta
+7. **Publication** (Sprint 8): Publish EqIA on Cabinet Office website (transparency)
+8. **Monitoring** (Ongoing): Quarterly bias audits (STORY-036) to validate EqIA findings
+
+**EqIA Contents**:
+- Description of AI system and intended users
+- Assessment of potential impact on each protected characteristic (positive, negative, neutral)
+- Evidence base (user demographics, training data analysis, bias testing results)
+- Consultation feedback (internal stakeholders, pilot users, equality groups)
+- Mitigations to eliminate/reduce negative impacts
+- Monitoring plan (quarterly bias audits, user feedback, complaints analysis)
+- Action plan with owners and timelines
+
+**Success Criteria**:
+- EqIA completed using Cabinet Office EqIA template (Sprint 8)
+- Consultation with Equality & Diversity Lead and pilot departments completed
+- Mitigations identified for all negative impacts (bias testing STORY-035-036, diverse training data, fairness metrics)
+- SRO sign-off obtained before Private Beta (Month 6)
+- EqIA published on Cabinet Office website (Sprint 8)
+- Quarterly bias audits validate EqIA findings (>= 95% demographic parity)
+
+**Timeline**:
+- Sprint 7-8 (Month 4): EqIA completion, consultation, sign-off
+- Month 6: Private Beta gate (EqIA approval required)
+- Quarterly (ongoing): Bias audits to monitor EqIA compliance
+
+**Owner**: AI Lead + Equality & Diversity Lead
+
+**Priority**: HIGH (Private Beta blocker)
+
+**Aligns With**:
+- AI Playbook Principle 2: "Lawful and Ethical Use" (7/10 score, -3 for incomplete EqIA)
+- AI Playbook Theme 3: "Fairness, Bias, and Discrimination" (7/10 score)
+- Architecture Principle 9: "Responsible AI and Ethical AI Governance"
+- STORY-035-036: Bias Detection + Quarterly Audits (Sprint 8)
+
+**Traceability**:
+- **Addresses**: AI Playbook GAP-01 (EqIA Not Started - HIGH risk)
+- **Stakeholder**: Equality & Diversity Lead, ICO (regulatory oversight)
+- **Gate Dependency**: Private Beta launch (Month 6)
+
+---
+
+#### NFR-C-008: Human Rights Assessment Completion
+
+**Requirement**: Complete Human Rights Assessment to ensure AI system complies with European Convention on Human Rights (ECHR) before Private Beta launch.
+
+**Rationale**: GAP-02 from AI Playbook assessment (ARC-001-AIPB-v1.1). Human Rights Assessment is MANDATORY for HIGH-RISK AI systems affecting fundamental rights. Failure to complete assessment may result in ECHR violations (privacy, non-discrimination, freedom of expression).
+
+**ECHR Articles in Scope**:
+- **Article 8 (Right to Privacy)**: AI processes OFFICIAL-SENSITIVE data (immigration cases, tax matters, health policy)
+  - **Risk**: Unauthorized data access, cross-tenant data leaks, inadequate encryption
+  - **Mitigation**: Multi-tenant isolation (EPIC-002), encryption (TLS 1.3, AES-256), access controls (RBAC), audit logging
+- **Article 14 (Prohibition of Discrimination)**: AI must not discriminate based on protected characteristics
+  - **Risk**: Biased AI outputs perpetuating discrimination (gender, race, age, disability)
+  - **Mitigation**: Bias testing (STORY-035-036), EqIA (NFR-C-007), fairness metrics (<5% deviation), diverse training data
+- **Article 10 (Freedom of Expression)**: AI content filtering must not over-censor legitimate expression
+  - **Risk**: Prompt injection defenses block legitimate queries, content policy too restrictive
+  - **Mitigation**: <2% false positive rate (NFR-SEC-009), human review for borderline cases, appeals process
+- **Article 6 (Right to Fair Trial)**: AI-assisted legal advice must not undermine fair trial rights
+  - **Risk**: Hallucinated legal advice causes incorrect legal positions
+  - **Mitigation**: Human-in-the-loop for legal matters (STORY-037-038), watermarking "AI-Generated - Verify Before Use", low-confidence warnings
+
+**Human Rights Assessment Process**:
+1. **Screening** (Sprint 8): Determine which ECHR articles are engaged (HIGH-RISK AI = YES for Articles 8, 14, 10)
+2. **Impact Analysis** (Sprint 9): Assess potential interference with each ECHR article
+3. **Legitimacy Test** (Sprint 9): Is interference lawful, necessary, proportionate?
+   - **Lawful**: UK GDPR, Data Protection Act 2018, Equality Act 2010 compliance
+   - **Necessary**: AI achieves legitimate government aim (efficiency, cost savings, better policy advice)
+   - **Proportionate**: Mitigations in place to minimize rights interference (encryption, bias testing, human review)
+4. **Consultation** (Sprint 9): Engage Legal Team, DPO, pilot departments, civil liberties groups (optional)
+5. **Sign-off** (Sprint 9): Obtain Legal Team and SRO approval before Private Beta
+6. **Publication** (Sprint 9): Publish Human Rights Assessment on Cabinet Office website (transparency)
+7. **Monitoring** (Ongoing): Quarterly review of human rights compliance (complaints, incidents, bias audits)
+
+**Human Rights Assessment Contents**:
+- Description of AI system and data processing
+- Identification of ECHR articles engaged (Articles 6, 8, 10, 14)
+- Assessment of interference with each article (nature, severity, affected groups)
+- Legitimacy analysis (lawful basis, necessity, proportionality)
+- Mitigations to minimize interference (technical, organizational, procedural)
+- Consultation feedback (Legal Team, DPO, affected groups)
+- Sign-off from Legal Team and SRO
+
+**Success Criteria**:
+- Human Rights Assessment completed using UK Government template (Sprint 9)
+- All ECHR articles assessed (Articles 6, 8, 10, 14)
+- Legitimacy test passed (lawful, necessary, proportionate)
+- Mitigations implemented for all rights interferences
+- Legal Team and SRO sign-off obtained before Private Beta (Month 6)
+- Human Rights Assessment published on Cabinet Office website (Sprint 9)
+- Quarterly review of compliance (complaints analysis, bias audits, incident reports)
+
+**Timeline**:
+- Sprint 8-9 (Month 4-5): Human Rights Assessment completion, Legal Team consultation, sign-off
+- Month 6: Private Beta gate (Human Rights Assessment approval required)
+- Quarterly (ongoing): Compliance monitoring
+
+**Owner**: Legal Team + Product Owner
+
+**Priority**: HIGH (Private Beta blocker)
+
+**Aligns With**:
+- AI Playbook Principle 2: "Lawful and Ethical Use" (7/10 score, -3 for incomplete Human Rights Assessment)
+- Architecture Principle 5: "Privacy by Design"
+- Architecture Principle 9: "Responsible AI and Ethical AI Governance"
+- STORY-037-038: Human-in-the-Loop for high-stakes decisions (Sprint 9)
+
+**Traceability**:
+- **Addresses**: AI Playbook GAP-02 (Human Rights Assessment Not Started - HIGH risk)
+- **Stakeholder**: Legal Team, Cabinet Office Permanent Secretary (Accounting Officer)
+- **Gate Dependency**: Private Beta launch (Month 6)
+
+---
+
+#### NFR-C-009: AI Bias Testing and Fairness Metrics
+
+**Requirement**: Conduct comprehensive bias testing across all protected characteristics and establish fairness metrics with quarterly monitoring to ensure AI outputs do not perpetuate discrimination.
+
+**Rationale**: GAP-03 from AI Playbook assessment (ARC-001-AIPB-v1.1). Bias testing is MANDATORY for HIGH-RISK AI systems to comply with Equality Act 2010 and AI Playbook Theme 3 (Fairness, Bias, and Discrimination). Without bias testing, AI may perpetuate systemic discrimination.
+
+**Bias Testing Scope** (Sprint 8):
+
+**1. Protected Characteristics** (Equality Act 2010):
+- Gender (male, female, non-binary)
+- Ethnicity (White British, White Other, Asian, Black, Mixed, Other)
+- Age (9 age bands: <18, 18-24, 25-34, 35-44, 45-54, 55-64, 65-74, 75-84, 85+)
+- Disability (physical, mental health, learning disabilities, sensory impairments)
+- Religion (Christianity, Islam, Judaism, Hinduism, Sikhism, Buddhism, no religion, other)
+- Sexual orientation (heterosexual, lesbian, gay, bisexual, other)
+
+**2. Fairness Metrics**:
+- **Demographic Parity**: AI output distribution similar across demographic groups (threshold: <5% deviation)
+  - Example: If 50% of queries from men receive "approved" advice, 45-55% of queries from women should also receive "approved" advice
+- **Equal Opportunity**: True positive rate similar across groups (threshold: <5% deviation)
+  - Example: If AI correctly answers 85% of policy questions from White users, it should correctly answer 80-90% from BAME users
+- **Individual Fairness**: Similar individuals receive similar AI outputs (regardless of protected characteristics)
+  - Example: Two policy advisors with same query should receive similar AI outputs, regardless of gender/ethnicity
+
+**3. Bias Testing Methodology**:
+- **Test Dataset**: 1,000+ queries spanning all protected characteristics (synthetically generated + pilot user queries)
+- **AI Model Evaluation**: Submit test queries to AI, analyze outputs by demographic group
+- **Statistical Analysis**: Calculate fairness metrics (demographic parity, equal opportunity, disparate impact ratio)
+- **Qualitative Review**: Human reviewers assess outputs for biased language, stereotypes, microaggressions
+- **Root Cause Analysis**: If bias detected, investigate source (training data, model, prompt engineering, retrieval corpus)
+
+**4. Bias Detection Tools**:
+- **Automated**: Fairlearn (Microsoft), AI Fairness 360 (IBM), What-If Tool (Google)
+- **Manual**: Human reviewers from Equality & Diversity team + pilot departments
+- **Continuous**: Bias monitoring dashboard (weekly alerts if fairness metric breaches threshold)
+
+**Bias Testing Process**:
+1. **Sprint 7**: Prepare test dataset (1,000+ queries, demographic labels)
+2. **Sprint 8**: Execute bias testing, calculate fairness metrics, identify biased outputs
+3. **Sprint 8**: Root cause analysis (training data audit, model interrogation, prompt review)
+4. **Sprint 8**: Implement mitigations (re-prompt engineering, diverse training data, fairness constraints in model)
+5. **Sprint 8**: Re-test to validate mitigations effective
+6. **Sprint 8**: Document bias testing results in EqIA (NFR-C-007) and ATRS Tier 2 (NFR-C-005)
+7. **Quarterly (ongoing)**: Bias audits (STORY-036) with same methodology
+
+**Mitigation Strategies** (if bias detected):
+- **Training Data Diversification**: Add underrepresented demographic data (e.g., more female-authored policy documents)
+- **Prompt Engineering**: Neutral prompts avoiding gender/race/age assumptions
+- **Fairness Constraints**: Apply fairness constraints during model inference (if using fine-tuned model)
+- **Human Review**: Flag outputs for human review if fairness metric breached
+- **User Feedback**: Thumbs down button (STORY-031) allows users to report biased outputs
+
+**Success Criteria**:
+- Bias testing completed across all protected characteristics (Sprint 8)
+- Fairness metrics calculated: Demographic parity <5% deviation, Equal opportunity <5% deviation
+- All biased outputs identified and mitigated
+- Bias testing results documented in EqIA (NFR-C-007) and ATRS Tier 2 (NFR-C-005)
+- Quarterly bias audits (STORY-036) validate ongoing compliance
+- Bias monitoring dashboard deployed (real-time fairness metric tracking)
+
+**Timeline**:
+- Sprint 7-8 (Month 4): Bias testing execution, mitigation, documentation
+- Quarterly (ongoing): Bias audits (STORY-036)
+
+**Owner**: AI Lead + Data Scientist
+
+**Priority**: HIGH (Private Beta blocker)
+
+**Aligns With**:
+- AI Playbook Theme 3: "Fairness, Bias, and Discrimination" (7/10 score, +3 with bias testing)
+- AI Playbook Principle 2: "Lawful and Ethical Use" (7/10 score, +1 with bias testing)
+- Architecture Principle 9: "Responsible AI and Ethical AI Governance"
+- Equality Act 2010 compliance
+- STORY-035-036: Bias Detection + Quarterly Audits (Sprint 8)
+
+**Traceability**:
+- **Addresses**: AI Playbook GAP-03 (Bias Testing Not Completed - HIGH risk)
+- **Stakeholder**: Equality & Diversity Lead, ICO, pilot departments
+- **Gate Dependency**: Private Beta launch (Month 6)
+
+---
+
+#### NFR-C-010: ATRS Publication on GOV.UK
+
+**Requirement**: Publish complete Algorithmic Transparency Recording Standard (ATRS) Tier 1 + Tier 2 on GOV.UK ATRS repository within 6 months of Private Beta launch (by Month 9, target 2026-03-31).
+
+**Rationale**: BLOCKING-02 from AI Playbook assessment (ARC-001-AIPB-v1.1). ATRS publication is MANDATORY for central government departments using algorithmic tools. Non-compliance violates UK Government transparency commitments and AI Playbook Theme 2 (Transparency and Explainability).
+
+**ATRS Completeness** (current status from atrs-record.md v1.1):
+- **Current**: 70% complete (47/68 fields)
+- **Target**: ≥90% complete (61/68 fields) for GOV.UK publication
+- **Blocking Issues**: 7 CRITICAL/HIGH issues (DPIA, EqIA, Human Rights, Bias Testing, SRO approval, Model metrics, Audit)
+
+**ATRS Tier 1 (Public Summary)** - MANDATORY:
+1. Tool Name and Description (plain English)
+2. Organization and Contact Information
+3. Scope and Scale (users, departments, data classification)
+4. Risk Level (HIGH-RISK AI SYSTEM)
+5. Key Safeguards (human review, transparency, bias testing, security)
+6. Appeals and Contestability (how users can challenge AI outputs)
+
+**ATRS Tier 2 (Detailed Technical)** - BEST PRACTICE:
+1. Owner and Responsibility (SRO, team, suppliers, procurement)
+2. Description and Rationale (AI model, scope, alternatives considered)
+3. Decision-Making Process (human-in-loop, training, appeals)
+4. Data (sources, sharing, storage, security, retention)
+5. Impact Assessments (DPIA, EqIA, Human Rights Assessment - NFR-C-006, NFR-C-007, NFR-C-008)
+6. Fairness, Bias, and Discrimination (bias testing results - NFR-C-009)
+7. Technical Details (model performance, explainability, versioning)
+8. Testing and Assurance (red team results - NFR-SEC-008, pen testing, audits)
+9. Transparency and Explainability (source citations, confidence scoring - NFR-SEC-011)
+10. Governance and Oversight (AI Governance Board, risk register, incident management - NFR-SEC-012)
+11. Compliance (legal basis, GDPR, standards, procurement)
+12. Performance and Outcomes (KPIs, benefits, user feedback, continuous improvement)
+13. Review and Updates (quarterly schedule, version history, triggers for unscheduled review)
+
+**ATRS Publication Process**:
+1. **Sprint 11-12** (Month 6): Draft ATRS Tier 1 + Tier 2 (STORY-041-042)
+   - Populate all 68 fields (target ≥90% completeness)
+   - Resolve 7 blocking issues (DPIA NFR-C-006, EqIA NFR-C-007, Human Rights NFR-C-008, Bias Testing NFR-C-009, SRO approval, Model metrics post-deployment, Independent audit)
+2. **Month 7**: Internal Review
+   - DPO review (data protection compliance)
+   - Legal review (legal basis, liability, transparency)
+   - CDDO review (TCoP compliance, best practice)
+   - Security review (NCSC, no sensitive information disclosed)
+3. **Month 8**: SRO Approval
+   - Product Owner presents ATRS to SRO
+   - SRO sign-off required before GOV.UK publication
+   - Permanent Secretary notified (Accounting Officer)
+4. **Month 9** (target 2026-03-31): GOV.UK Publication (STORY-043)
+   - Submit ATRS to GOV.UK ATRS repository: https://www.gov.uk/algorithmic-transparency-records
+   - Publish on Cabinet Office website (dedicated AI transparency page)
+   - Notify pilot departments, CDDO, ICO, NCSC
+   - Press release (optional, coordinate with Cabinet Office Communications)
+5. **Quarterly (ongoing)**: ATRS Updates
+   - Refresh ATRS with latest data (bias audit results, red team findings, incident metrics, user feedback)
+   - Significant changes trigger unscheduled update (new AI model, scope expansion, security incident)
+
+**ATRS Transparency Commitments**:
+- **Public Accessibility**: ATRS published on GOV.UK (no login required, accessible to citizens)
+- **Plain English**: Tier 1 written in jargon-free language (target: Reading Age 14)
+- **Completeness**: All mandatory fields populated, TBD fields minimized
+- **Accuracy**: ATRS reflects actual system behavior (not aspirational)
+- **Currency**: Quarterly updates, version history tracked
+- **Feedback Mechanism**: Email address for public queries (algorithmic-transparency@cabinetoffice.gov.uk)
+
+**Success Criteria**:
+- ATRS Tier 1 + Tier 2 completed ≥90% (61/68 fields) by Month 7
+- All 7 blocking issues resolved (DPIA, EqIA, Human Rights, Bias Testing, SRO approval, Model metrics, Audit)
+- Internal reviews completed (DPO, Legal, CDDO, Security) by Month 8
+- SRO approval obtained by Month 8
+- ATRS published on GOV.UK by Month 9 (within 6 months of Private Beta launch September 2025)
+- ATRS updated quarterly with latest metrics (bias audits, red team results, incident stats)
+- Public feedback mechanism operational (email monitored weekly)
+
+**Timeline**:
+- Sprint 11-12 (Month 6): ATRS drafting (STORY-041-042)
+- Month 7: Internal reviews (DPO, Legal, CDDO, Security)
+- Month 8: SRO approval
+- Month 9 (target 2026-03-31): GOV.UK publication (STORY-043)
+- Quarterly (ongoing): ATRS updates
+
+**Owner**: Product Owner + AI Lead
+
+**Priority**: CRITICAL (NON-NEGOTIABLE, BLOCKING for Public Beta)
+
+**Aligns With**:
+- AI Playbook Theme 2: "Transparency and Explainability" (7/10 score, +3 with ATRS publication)
+- Architecture Principle 11: "Algorithmic Transparency" (NON-NEGOTIABLE for AI systems)
+- Stakeholder Goal G-3: "Achieve AI Playbook compliance > 90% and publish ATRS within 6 months"
+- NFR-C-005: ATRS Publication (existing requirement, now enhanced with specific GOV.UK process)
+
+**Traceability**:
+- **Addresses**: AI Playbook BLOCKING-02 (ATRS Not Published - HIGH risk)
+- **Stakeholder**: CDDO Director (standards authority), ICO (regulatory oversight), Cabinet Office Minister (political accountability)
+- **Gate Dependency**: Public Beta launch (Month 10) - ATRS publication by Month 9 required
+
+---
+
+#### NFR-C-011: Environmental Impact Assessment and Carbon Footprint Reporting
+
+**Requirement**: Measure and report carbon footprint of AI system (model training + inference) with annual sustainability reporting to meet UK Government Net Zero commitments.
+
+**Rationale**: GAP-07 from AI Playbook assessment (ARC-001-AIPB-v1.1). AI Playbook Theme 6 (Societal Wellbeing and Public Good) requires environmental impact consideration. Generative AI has significant carbon footprint (model training, inference, data centers). UK Government Net Zero Strategy 2050 requires all departments to report carbon emissions.
+
+**Carbon Footprint Scope**:
+
+**1. AI Model Training** (vendor responsibility):
+- GPT-4 training: ~500 tonnes CO2e (estimated, vendor-reported)
+- Claude training: ~300 tonnes CO2e (estimated, vendor-reported)
+- AWS Bedrock: Vendor-reported carbon intensity per training run
+- **Government Responsibility**: Request carbon footprint data from AI vendor (contractual obligation - see NFR-PROC-001)
+
+**2. AI Inference** (government responsibility):
+- Cloud infrastructure: AWS eu-west-2 (London) or Azure UK South carbon intensity (gCO2e/kWh)
+- AI API calls: ~0.1-1 gCO2e per query (varies by model size, query length)
+- Estimated annual: 50,000 queries/day × 365 days × 0.5 gCO2e = 9,125 kg CO2e/year (9.1 tonnes)
+- Data storage: S3/Blob Storage carbon intensity (gCO2e/GB-month)
+- Network transfer: Data egress carbon intensity (gCO2e/GB)
+
+**3. End-User Devices** (out of scope for MVP):
+- User laptops/desktops: Not measured (existing government hardware)
+- Browser energy consumption: Minimal (web app, not resource-intensive)
+
+**Carbon Measurement Methodology**:
+- **Cloud Provider Tools**: AWS Customer Carbon Footprint Tool, Azure Emissions Impact Dashboard
+- **Third-Party Tools**: Cloud Carbon Footprint (open-source), GreenIT-Analysis
+- **Calculation**: Total kWh consumed × UK grid carbon intensity (gCO2e/kWh) = total CO2e
+- **Baseline**: Measure carbon footprint at Private Beta launch (Month 6)
+- **Annual Reporting**: Report carbon footprint in Annual Report and Accounts (ARA)
+
+**Carbon Reduction Strategies**:
+- **Efficient AI Models**: Use smaller, more efficient models where possible (e.g., GPT-3.5 vs GPT-4 for low-stakes queries)
+- **Caching**: Cache frequent queries to avoid redundant AI API calls (reduce inference load)
+- **Right-sizing**: Scale infrastructure to actual demand (avoid over-provisioning)
+- **Renewable Energy**: AWS/Azure UK regions have high renewable energy mix (60%+ in UK South)
+- **Carbon Offsetting**: Purchase voluntary carbon credits to offset unavoidable emissions (optional)
+
+**Environmental Impact Assessment Process**:
+1. **Sprint 15** (Month 7-8): Data collection
+   - Request carbon footprint data from AI vendor (model training)
+   - Deploy cloud carbon monitoring tools (AWS/Azure dashboards)
+   - Calculate baseline carbon footprint (inference + storage + network)
+2. **Sprint 15**: Impact analysis
+   - Compare AI carbon footprint to non-AI alternative (manual drafting, human research)
+   - Net environmental impact: AI carbon footprint - avoided carbon footprint (efficiency gains)
+   - Example: If AI saves 1,000 civil servant hours/month, avoided travel emissions may offset AI emissions
+3. **Sprint 15**: Mitigation planning
+   - Identify carbon reduction strategies (efficient models, caching, right-sizing)
+   - Set carbon reduction targets (e.g., 10% reduction Year 2)
+4. **Sprint 15**: Reporting
+   - Document environmental impact in ATRS Tier 2 Section 12 (Performance and Outcomes)
+   - Report in Annual Report and Accounts (ARA) - Sustainability section
+   - Publish on Cabinet Office website (transparency)
+5. **Annual (ongoing)**: Carbon footprint monitoring and reporting
+
+**Success Criteria**:
+- Carbon footprint baseline measured at Private Beta launch (Month 6)
+- Vendor-reported AI model training carbon footprint obtained (Sprint 3 vendor selection)
+- Cloud carbon monitoring tools deployed (AWS/Azure dashboards)
+- Annual carbon footprint reported in ARA (Sustainability section)
+- ATRS Tier 2 Section 12 updated with carbon footprint data (annual)
+- Carbon reduction strategies implemented (efficient models, caching, right-sizing)
+- Year-over-year carbon intensity reduction (target: 10% reduction Year 2)
+
+**Timeline**:
+- Sprint 3 (Month 2): Request carbon footprint data from AI vendor (part of procurement)
+- Sprint 15 (Month 7-8): Environmental impact assessment, carbon baseline measurement
+- Annual (ongoing): Carbon footprint monitoring and reporting (ARA)
+
+**Owner**: Sustainability Lead + Infrastructure Lead
+
+**Priority**: MEDIUM (before Public Beta)
+
+**Aligns With**:
+- AI Playbook Theme 6: "Societal Wellbeing and Public Good" (7/10 score, +1 with environmental assessment)
+- UK Government Net Zero Strategy 2050
+- Greening Government Commitments (GGC) - carbon reduction targets
+- Cabinet Office Sustainability Plan
+
+**Traceability**:
+- **Addresses**: AI Playbook GAP-07 (Environmental Impact Not Assessed - MEDIUM priority)
+- **Stakeholder**: Sustainability Lead, Cabinet Office Permanent Secretary (Net Zero accountability)
+- **Gate Dependency**: Public Beta launch (Month 10) - recommended before Public Beta, not blocking
+
+---
+
+### Team Training and Development Requirements
+
+#### NFR-TRAIN-001: AI Fundamentals Training for Project Team and Pilot Users
+
+**Requirement**: Deliver comprehensive AI fundamentals training to all project team members (developers, product owner, pilot users) covering AI capabilities, limitations, ethical considerations, and responsible AI practices before Alpha gate.
+
+**Rationale**: GAP-05 from AI Playbook assessment (ARC-001-AIPB-v1.1). AI Playbook Principle 1 (Understanding AI) scores 8/10 with gap for team AI training not evidenced. Team must understand AI limitations (hallucinations, bias, edge cases) to use AI responsibly and avoid overestimating AI capabilities.
+
+**Training Audience**:
+- **Project Team** (15 people): Product Owner, AI Lead, Data Scientist, Security Lead, Infrastructure Lead, Privacy Lead, Legal, UX, 7 developers
+- **Pilot Users** (60 people): Home Office (20), HMRC (20), DHSC (20) - policy advisors, analysts, Senior Civil Service
+
+**Training Content** (5 hours total, delivered over 2 days):
+
+**Module 1: AI Fundamentals** (1 hour):
+- What is AI? What is Generative AI (LLM)?
+- How do AI models work? (training, inference, parameters)
+- AI capabilities (summarization, drafting, Q&A, semantic search)
+- AI limitations (hallucinations, bias, edge cases, inability to reason)
+
+**Module 2: AI Risks and Failure Modes** (1 hour):
+- **Hallucinations**: AI generates false information presented confidently
+- **Bias**: AI perpetuates discrimination (gender, race, age, disability)
+- **Prompt Injection**: Adversarial users manipulate AI via crafted prompts
+- **Data Leaks**: AI may leak cross-tenant data if multi-tenancy fails
+- **Overreliance**: Users blindly trust AI without verification
+- **Case Studies**: Netherlands child benefits scandal, Amazon recruiting tool bias, Microsoft Tay chatbot incident
+
+**Module 3: Responsible AI Practices** (1 hour):
+- **Human-in-the-Loop**: Always review AI outputs, especially for high-stakes decisions
+- **Verification**: Cross-check AI claims against original sources
+- **Watermarking**: Recognize "AI-Generated - Verify Before Use" labels
+- **Low Confidence**: Heed low-confidence warnings (red color code)
+- **Thumbs Down**: Report incorrect/biased outputs (STORY-031)
+- **Ethical Principles**: Fairness, transparency, accountability, privacy
+
+**Module 4: Cabinet Office GenAI Platform Specific** (1 hour):
+- Platform walkthrough (UI tour, features, limitations)
+- Use case demonstrations (document summarization, drafting, Q&A)
+- Do's and Don'ts (appropriate use cases, prohibited use cases)
+- Security awareness (no SECRET data, no personal mobile devices, MFA required)
+- High-stakes escalation (constitutional, legal, financial >£1M require SCS review)
+
+**Module 5: Hands-On Workshop** (1 hour):
+- Pilot users draft queries, receive AI outputs, practice verification
+- Identify hallucinations, bias, edge cases in sample outputs
+- Use thumbs up/down, watermarking, confidence scores
+- Q&A with AI Lead (address concerns, clarify use cases)
+
+**Training Delivery**:
+- **Format**: Virtual workshops (Microsoft Teams) + in-person optional (Cabinet Office)
+- **Frequency**: Sprint 2-3 (Month 1-2) - before Alpha gate
+- **Trainer**: AI Lead + external AI ethics expert (e.g., Ada Lovelace Institute, Alan Turing Institute)
+- **Materials**: Slide deck, handouts, video recordings (for async learning), quiz (pass 80%)
+- **Attendance**: Mandatory for project team, strongly encouraged for pilot users
+- **Certification**: Certificate of completion (valid 2 years, refresh training required)
+
+**Training Assessment**:
+- **Quiz**: 20 multiple-choice questions, 80% pass rate required
+- **Practical**: Submit 3 AI queries, identify limitations, practice verification
+- **Feedback**: Post-training survey (satisfaction, knowledge gain, behavior change)
+
+**Success Criteria**:
+- 100% of project team complete training (15/15 people) by Sprint 3
+- ≥80% of pilot users complete training (48/60 people) by Private Beta (Month 6)
+- Average quiz score ≥85%
+- Post-training survey satisfaction ≥4.0/5
+- Training materials published on internal wiki (Confluence/SharePoint)
+- Refresh training delivered annually (Year 2+)
+
+**Timeline**:
+- Sprint 2 (Month 1): Training content development, trainer procurement
+- Sprint 2-3 (Month 1-2): Training delivery (project team first, then pilot users)
+- Month 5 (Alpha gate): Verify 100% project team trained
+- Month 6 (Private Beta gate): Verify ≥80% pilot users trained
+- Annual (Year 2+): Refresh training
+
+**Owner**: Product Owner + AI Lead
+
+**Priority**: HIGH (Alpha gate dependency)
+
+**Aligns With**:
+- AI Playbook Principle 1: "Understanding AI" (8/10 score, +2 with team training)
+- AI Playbook Principle 9: "Skills and Expertise" (9/10 score, validates multidisciplinary team)
+- Architecture Principle 9: "Responsible AI and Ethical AI Governance"
+
+**Traceability**:
+- **Addresses**: AI Playbook GAP-05 (Team AI Training Not Evidenced - MEDIUM priority)
+- **Stakeholder**: Product Owner, AI Lead, pilot department CIOs
+- **Gate Dependency**: Alpha gate (Month 5) - 100% project team trained required
+
+---
+
+### Procurement Requirements
+
+#### NFR-PROC-001: AI-Specific Vendor Contract Terms
+
+**Requirement**: Define and incorporate AI-specific contract terms in vendor procurement (Azure OpenAI, AWS Bedrock, Anthropic) covering accuracy SLA, bias audits, data ownership, liability, exit strategy, and carbon footprint reporting before vendor selection in Sprint 3.
+
+**Rationale**: GAP-04 from AI Playbook assessment (ARC-001-AIPB-v1.1). AI Playbook Principle 8 (Commercial Partnership) scores 8/10 with gap for AI-specific contract terms not defined. Without AI-specific terms, vendor may not meet quality standards, government has no recourse for AI failures, and vendor lock-in risk is high.
+
+**AI-Specific Contract Terms**:
+
+**1. AI Model Performance SLA**:
+- **Accuracy SLA**: Model accuracy ≥85% on government policy domain benchmark (quarterly testing)
+- **Hallucination Rate**: Hallucination rate <10% (measured via human evaluation of random sample)
+- **Response Time SLA**: API response time <3 seconds (95th percentile), <10 seconds (99th percentile)
+- **Availability SLA**: 99.9% uptime (43 minutes/month downtime allowed), financial penalties for breaches
+- **Performance Degradation**: Vendor must notify within 24 hours if model performance drops >5%
+
+**2. Bias Audits and Fairness**:
+- **Quarterly Bias Audits**: Vendor provides quarterly bias audit reports (fairness metrics across protected characteristics)
+- **Bias Threshold**: Demographic parity deviation <5%, equal opportunity deviation <5%
+- **Bias Remediation**: If bias detected, vendor must remediate within 30 days (re-train model, adjust prompts)
+- **Government Audit Rights**: Government reserves right to conduct independent bias audits (vendor must cooperate)
+
+**3. Data Ownership and Usage**:
+- **Government Data Ownership**: Government owns all data (queries, documents, outputs, audit logs)
+- **Vendor Training Prohibition**: Vendor MUST NOT use government data to train/improve AI models (zero data retention)
+- **Data Deletion**: Vendor deletes all government data within 30 days of contract termination (certificate of deletion)
+- **Data Residency**: All data processed in UK regions (AWS eu-west-2, Azure UK South) - no cross-border transfers
+- **Data Access Controls**: Vendor personnel require UK security clearance (SC) to access government data
+
+**4. Liability and Indemnity**:
+- **AI Failures**: Vendor liable for AI failures causing material harm (hallucinations, bias, data leaks)
+- **Indemnity Cap**: £10M indemnity cap (covers data breaches, discrimination lawsuits, reputational damage)
+- **Limitation of Liability**: Vendor NOT liable for government misuse of AI (e.g., deploying AI for inappropriate use cases)
+- **Insurance**: Vendor must maintain £10M professional indemnity insurance + £5M cyber insurance
+
+**5. Exit Strategy and Data Portability**:
+- **Data Portability**: Vendor provides data export in open formats (JSON, CSV, Parquet) within 30 days
+- **API Abstraction**: Government uses abstraction layer (not vendor-specific APIs) to enable multi-vendor strategy
+- **Transition Support**: Vendor provides 90 days transition support if government switches vendors (no additional cost)
+- **No Lock-In**: No contractual lock-in (annual renewal, 90-day termination notice)
+
+**6. Transparency and Explainability**:
+- **Model Card**: Vendor provides model card (training data, performance metrics, known limitations, bias testing)
+- **Model Updates**: Vendor notifies 30 days before deploying new model version (allow government testing)
+- **Explainability Support**: Vendor provides explainability tools (confidence scores, source attribution, reasoning traces)
+- **Security Vulnerability Disclosure**: Vendor notifies within 24 hours of AI security vulnerabilities (prompt injection, data leaks)
+
+**7. Environmental Impact Reporting**:
+- **Carbon Footprint Disclosure**: Vendor reports carbon footprint (model training + inference) annually
+- **Renewable Energy**: Vendor data centers use ≥60% renewable energy (aligned with UK grid mix)
+- **Carbon Reduction Targets**: Vendor commits to year-over-year carbon intensity reduction (10%/year)
+
+**8. Compliance and Audit**:
+- **UK GDPR Compliance**: Vendor is Data Processor, government is Data Controller (DPA required)
+- **SOC 2 Type II**: Vendor provides annual SOC 2 Type II audit report (security, availability, confidentiality)
+- **ISO 27001**: Vendor maintains ISO 27001 certification (information security management)
+- **UK Data Residency**: Vendor guarantees UK data residency (contractual commitment, auditable)
+- **Government Audit Rights**: Government reserves right to audit vendor (annually, on-site if required)
+
+**Procurement Process**:
+1. **Sprint 2** (Month 1): Define AI-specific contract terms (Legal Team + Procurement Lead + AI Lead)
+2. **Sprint 3** (Month 2): Issue RFP/RFQ with AI-specific terms (G-Cloud, DOS, open tender)
+3. **Sprint 3** (Month 2): Evaluate vendor proposals (technical, commercial, legal compliance)
+4. **Sprint 3** (Month 2): Negotiate contract terms (Legal Team + Procurement Lead)
+5. **Sprint 3** (Month 2): Contract signature, vendor onboarding
+6. **Annual (ongoing)**: Vendor performance review (SLA compliance, bias audits, security audits)
+
+**Vendor Evaluation Criteria**:
+- **Technical** (40%): Model performance, API reliability, explainability support, UK data residency
+- **Commercial** (30%): Cost per query, volume discounts, exit strategy, no lock-in
+- **Legal** (20%): AI-specific terms acceptance, data ownership, liability, indemnity cap
+- **Compliance** (10%): SOC 2 Type II, ISO 27001, UK GDPR, carbon footprint reporting
+
+**Success Criteria**:
+- AI-specific contract terms defined by Sprint 2
+- RFP/RFQ issued with AI-specific terms by Sprint 3
+- Vendor selected and contract signed by Sprint 3
+- All AI-specific terms incorporated in final contract (no deviations)
+- Annual vendor performance review demonstrates SLA compliance (≥95%)
+- Quarterly bias audits received from vendor (bias <5% deviation)
+- Carbon footprint data received annually
+
+**Timeline**:
+- Sprint 2 (Month 1): Define AI-specific contract terms
+- Sprint 3 (Month 2): RFP/RFQ, vendor evaluation, contract signature
+- Ongoing: Annual vendor performance review
+
+**Owner**: Procurement Lead + AI Lead + Legal Team
+
+**Priority**: HIGH (Vendor Selection gate - Sprint 3)
+
+**Aligns With**:
+- AI Playbook Principle 8: "Commercial Partnership" (8/10 score, +2 with AI-specific contract terms)
+- Architecture Principle 1: "Cloud-First" (UK data residency)
+- Architecture Principle 3: "Reuse Before Buy Before Build" (avoid vendor lock-in)
+- Architecture Principle 19: "Commercial and Procurement Alignment"
+
+**Traceability**:
+- **Addresses**: AI Playbook GAP-04 (AI-Specific Contract Terms Missing - HIGH risk)
+- **Stakeholder**: Procurement Lead, Legal Team, Cabinet Office CTO
+- **Gate Dependency**: Vendor Selection (Sprint 3) - AI-specific contract terms MUST be in final contract
 
 ---
 

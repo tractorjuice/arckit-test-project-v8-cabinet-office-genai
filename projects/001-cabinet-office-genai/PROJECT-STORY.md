@@ -88,45 +88,83 @@ gantt
 
 ```mermaid
 flowchart TD
-    Start([Project Initiated<br/>2025-10-30 14:15<br/>Day 1]) --> Gap1[3 Days Gap]
+    Start(["Project Initiated
+    2025-10-30 14:15
+    Day 1"]) --> Gap1["3 Days Gap"]
 
-    Gap1 --> Stakeholders[/arckit.stakeholders<br/>2025-11-02 10:15<br/>13 stakeholders, 6 goals, 5 outcomes]
+    Gap1 --> Stakeholders["arckit.stakeholders
+    2025-11-02 10:15
+    13 stakeholders 6 goals 5 outcomes"]
 
-    Stakeholders --> Requirements1[/arckit.requirements<br/>2025-11-02 10:38<br/>67 requirements v1.0]
+    Stakeholders --> Requirements1["arckit.requirements
+    2025-11-02 10:38
+    67 requirements v1.0"]
 
-    Requirements1 --> ProjectPlan[/arckit.plan<br/>2025-11-02 11:12<br/>56 weeks, 5 phases]
+    Requirements1 --> ProjectPlan["arckit.plan
+    2025-11-02 11:12
+    56 weeks 5 phases"]
 
-    ProjectPlan --> Risk[/arckit.risk<br/>2025-11-02 11:12<br/>20 risks, 3 CRITICAL]
+    ProjectPlan --> Risk["arckit.risk
+    2025-11-02 11:12
+    20 risks 3 CRITICAL"]
 
-    Risk --> Backlog[/arckit.backlog<br/>2025-11-02 11:12<br/>42 stories, 524 points]
+    Risk --> Backlog["arckit.backlog
+    2025-11-02 11:12
+    42 stories 524 points"]
 
-    Backlog --> Analysis[/arckit.analyze<br/>2025-11-02 11:47<br/>Quality baseline]
+    Backlog --> Analysis["arckit.analyze
+    2025-11-02 11:47
+    Quality baseline"]
 
-    Analysis --> TCoP[/arckit.tcop<br/>2025-11-02 12:07<br/>11/13 85%]
+    Analysis --> TCoP["arckit.tcop
+    2025-11-02 12:07
+    11/13 85%"]
 
-    TCoP --> Secure[/arckit.secure<br/>2025-11-02 12:18<br/>11/14 79%]
+    TCoP --> Secure["arckit.secure
+    2025-11-02 12:18
+    11/14 79%"]
 
-    Secure --> Trace[/arckit.traceability<br/>2025-11-02 14:44<br/>100% coverage]
+    Secure --> Trace["arckit.traceability
+    2025-11-02 14:44
+    100% coverage"]
 
-    Trace --> Playbook1[/arckit.ai-playbook<br/>2025-11-02 15:12<br/>133/160 83%]
+    Trace --> Playbook1["arckit.ai-playbook
+    2025-11-02 15:12
+    133/160 83%"]
 
-    Playbook1 --> ATRS1[/arckit.atrs<br/>2025-11-02 15:28<br/>65% 44/68]
+    Playbook1 --> ATRS1["arckit.atrs
+    2025-11-02 15:28
+    65% 44/68"]
 
-    ATRS1 --> Gap2[Overnight<br/>~18 hours]
+    ATRS1 --> Gap2["Overnight
+    ~18 hours"]
 
-    Gap2 --> RedTeam[/arckit.requirements<br/>2025-11-03 09:16<br/>+5 AI Red Teaming]
+    Gap2 --> RedTeam["arckit.requirements
+    2025-11-03 09:16
+    +5 AI Red Teaming"]
 
-    RedTeam --> Playbook2[/arckit.ai-playbook<br/>2025-11-03 09:21<br/>134/160 84%]
+    RedTeam --> Playbook2["arckit.ai-playbook
+    2025-11-03 09:21
+    134/160 84%"]
 
-    Playbook2 --> ATRS2[/arckit.atrs<br/>2025-11-03 09:26<br/>70% 47/68]
+    Playbook2 --> ATRS2["arckit.atrs
+    2025-11-03 09:26
+    70% 47/68"]
 
-    ATRS2 --> Requirements2[/arckit.requirements<br/>2025-11-03 09:33<br/>75 requirements v1.2]
+    ATRS2 --> Requirements2["arckit.requirements
+    2025-11-03 09:33
+    75 requirements v1.2"]
 
-    Requirements2 --> Story1[/arckit.story<br/>2025-11-03 14:12<br/>v1.0 1,548 lines]
+    Requirements2 --> Story1["arckit.story
+    2025-11-03 14:12
+    v1.0 1548 lines"]
 
-    Story1 --> Story2[/arckit.story<br/>2025-11-03 15:00<br/>v2.0 regenerated]
+    Story1 --> Story2["arckit.story
+    2025-11-03 15:00
+    v2.0 regenerated"]
 
-    Story2 --> End([Timeline Complete<br/>16 commits, 15 artifacts])
+    Story2 --> End(["Timeline Complete
+    16 commits 15 artifacts"])
 
     style Start fill:#e1f5e1
     style End fill:#e1f5e1

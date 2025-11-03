@@ -104,35 +104,35 @@ gantt
 flowchart TD
     Start([Project Initiated<br/>2025-10-30]) --> README
 
-    README[Project Created<br/>2025-10-30<br/>README.md] --> Stakeholders
+    README["Project Created<br/>2025-10-30<br/>README.md"] --> Stakeholders
 
-    Stakeholders[/arckit.stakeholders<br/>2025-11-02 10:15<br/>13 stakeholders analyzed] --> ProjPlan
-    ProjPlan[/arckit.plan<br/>2025-11-02 10:15<br/>56-week timeline] --> Requirements
+    Stakeholders["arckit.stakeholders<br/>2025-11-02 10:15<br/>13 stakeholders analyzed"] --> ProjPlan
+    ProjPlan["arckit.plan<br/>2025-11-02 10:15<br/>56-week timeline"] --> Requirements
 
-    Requirements[/arckit.requirements<br/>2025-11-02 10:38<br/>67 requirements defined] --> Backlog
-    Backlog[/arckit.backlog<br/>2025-11-02 11:12<br/>42 stories, 26 sprints] --> Risk
-    Risk[/arckit.risk<br/>2025-11-02 11:12<br/>20 risks, Orange Book] --> Analysis1
+    Requirements["arckit.requirements<br/>2025-11-02 10:38<br/>67 requirements defined"] --> Backlog
+    Backlog["arckit.backlog<br/>2025-11-02 11:12<br/>42 stories, 26 sprints"] --> Risk
+    Risk["arckit.risk<br/>2025-11-02 11:12<br/>20 risks, Orange Book"] --> Analysis1
 
-    Analysis1[/arckit.analyze<br/>2025-11-02 11:47<br/>Governance quality 95/100] --> TCoP
+    Analysis1["arckit.analyze<br/>2025-11-02 11:47<br/>Governance quality 95/100"] --> TCoP
 
-    TCoP[/arckit.tcop<br/>2025-11-02 12:07<br/>11/13 compliant 85%] --> Secure
-    Secure[/arckit.secure<br/>2025-11-02 12:18<br/>11/14 CAF principles 79%] --> Trace
+    TCoP["arckit.tcop<br/>2025-11-02 12:07<br/>11/13 compliant 85%"] --> Secure
+    Secure["arckit.secure<br/>2025-11-02 12:18<br/>11/14 CAF principles 79%"] --> Trace
 
-    Trace[/arckit.traceability<br/>2025-11-02 14:44<br/>100% coverage verified] --> AIPlaybook
+    Trace["arckit.traceability<br/>2025-11-02 14:44<br/>100% coverage verified"] --> AIPlaybook
 
-    AIPlaybook[/arckit.ai-playbook<br/>2025-11-02 15:12<br/>133/160 points 83%] --> ATRS
-    ATRS[/arckit.atrs<br/>2025-11-02 15:28<br/>Tier 1+2 transparency] --> RedTeam
+    AIPlaybook["arckit.ai-playbook<br/>2025-11-02 15:12<br/>133/160 points 83%"] --> ATRS
+    ATRS["arckit.atrs<br/>2025-11-02 15:28<br/>Tier 1+2 transparency"] --> RedTeam
 
-    RedTeam[Requirements Update<br/>2025-11-03 09:16<br/>AI Red Teaming NFR-SEC-008 to 012] --> ATRSUpd1
-    ATRSUpd1[ATRS Update<br/>2025-11-03 09:26<br/>Section 8.4 Red Teaming] --> AIPBUpd1
-    AIPBUpd1[AI Playbook Update<br/>2025-11-03 09:21<br/>134/160 84% improved] --> GapReqs
+    RedTeam["Requirements Update<br/>2025-11-03 09:16<br/>AI Red Teaming NFR-SEC-008 to 012"] --> ATRSUpd1
+    ATRSUpd1["ATRS Update<br/>2025-11-03 09:26<br/>Section 8.4 Red Teaming"] --> AIPBUpd1
+    AIPBUpd1["AI Playbook Update<br/>2025-11-03 09:21<br/>134/160 84% improved"] --> GapReqs
 
-    GapReqs[Requirements Update<br/>2025-11-03 09:33<br/>Gap-closing NFR-C-006 to 011] --> Story1
+    GapReqs["Requirements Update<br/>2025-11-03 09:33<br/>Gap-closing NFR-C-006 to 011"] --> Story1
 
-    Story1[/arckit.story v1.0<br/>2025-11-03 14:12<br/>Initial story] --> Story2
-    Story2[/arckit.story v2.0<br/>2025-11-03 15:00<br/>Enhanced timeline] --> Story3
-    Story3[/arckit.story v3.0<br/>2025-11-03 15:08<br/>Comprehensive analysis] --> Story4
-    Story4[/arckit.story v4.0<br/>2025-11-03 15:20<br/>Final with corrected syntax] --> End
+    Story1["arckit.story v1.0<br/>2025-11-03 14:12<br/>Initial story"] --> Story2
+    Story2["arckit.story v2.0<br/>2025-11-03 15:00<br/>Enhanced timeline"] --> Story3
+    Story3["arckit.story v3.0<br/>2025-11-03 15:08<br/>Comprehensive analysis"] --> Story4
+    Story4["arckit.story v4.0<br/>2025-11-03 15:20<br/>Final with corrected syntax"] --> End
 
     End([Governance Framework<br/>Complete<br/>2025-11-03])
 

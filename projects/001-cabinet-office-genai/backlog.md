@@ -11,14 +11,14 @@
 
 ## Executive Summary
 
-**Total User Stories**: 42
+**Total User Stories**: 43
 **Total Epics**: 7
 **Total Technical Tasks**: 35
-**Total Story Points**: 524
-**Estimated Duration**: 26 sprints (56 weeks at 20 points/sprint)
+**Total Story Points**: 529
+**Estimated Duration**: 27 sprints (56 weeks at 20 points/sprint)
 
 ### Priority Breakdown
-- Must Have: 32 stories (368 points) - 70%
+- Must Have: 33 stories (373 points) - 70%
 - Should Have: 8 stories (104 points) - 20%
 - Could Have: 2 stories (52 points) - 10%
 
@@ -29,9 +29,9 @@
 4. **EPIC-004: Responsible AI & Governance** - 95 points (BR-004)
 5. **EPIC-005: Integration & Data Management** - 82 points (BR-006, BR-007)
 6. **EPIC-006: Platform Infrastructure & DevOps** - 45 points (BR-005, BR-007)
-7. **EPIC-007: Compliance & Regulatory** - 26 points (BR-004, BR-006, BR-007)
+7. **EPIC-007: Compliance & Regulatory** - 31 points (BR-004, BR-006, BR-007)
 
-**Total**: 524 story points across 7 epics
+**Total**: 529 story points across 7 epics
 
 ---
 
@@ -295,8 +295,8 @@ Deploy UK cloud infrastructure (AWS eu-west-2 London or Azure UK South), impleme
 **Business Value**: CRITICAL - NCSC/ICO/GDS approval required for launch
 **Risk**: CRITICAL - Failed assessment blocks Private Beta launch
 **Dependencies**: All epics (compliance review requires implemented features)
-**Total Story Points**: 26
-**Estimated Duration**: 3 sprints (Sprints 4-6)
+**Total Story Points**: 31
+**Estimated Duration**: 4 sprints (Sprints 4-5, Sprint 10)
 
 **Description**:
 Obtain ICO DPIA approval (before Private Beta), achieve NCSC Secure by Design assurance (before Private Beta), pass GDS Service Assessment (Alpha, Beta, Live gates), implement GDPR compliance (data subject rights, consent management), and obtain Cyber Essentials Plus certification.
@@ -313,8 +313,9 @@ Obtain ICO DPIA approval (before Private Beta), achieve NCSC Secure by Design as
 2. **STORY-065**: GDPR Consent Management & Audit Trail (5 points) - Sprint 4
 3. **STORY-066**: ICO DPIA Documentation & Submission (8 points) - Sprint 5
 4. **STORY-067**: GDS Alpha Assessment Preparation (5 points) - Sprint 5
+5. **STORY-068**: Article 18 Restriction of Processing Implementation (5 points) - Sprint 10
 
-**Total**: 26 story points across 4 stories
+**Total**: 31 story points across 5 stories
 
 ---
 
@@ -520,6 +521,35 @@ Obtain ICO DPIA approval (before Private Beta), achieve NCSC Secure by Design as
 
 Due to space constraints, detailed sprint plans for Sprints 5-26 are available upon request. Priority sequence follows multi-factor prioritization (MoSCoW + Risk + Value + Dependency).
 
+#### Sprint 10 Addition: STORY-068 (Article 18 Implementation)
+
+**STORY-068**: Article 18 Restriction of Processing Implementation (5 points) [EPIC-007: Compliance & Regulatory]
+
+- **As a** Data Subject (Policy Advisor)
+- **I want** to request restriction of processing on my personal data when I dispute its accuracy or lawfulness
+- **So that** the system suspends processing while the dispute is resolved (UK GDPR Article 18 compliance)
+
+**Acceptance Criteria**:
+- It's done when I can submit an Article 18 restriction request via the GDPR Data Subject Rights Portal
+- It's done when the system marks my data as "restricted" and suspends all processing except storage
+- It's done when the system notifies me within 1 month of the restriction decision
+- It's done when the system requires my explicit consent before lifting the restriction
+- It's done when all restriction requests and decisions are logged in the audit trail
+- It's done when DPO can review and approve/reject restriction requests via admin dashboard
+
+**Technical Tasks**:
+- Task-068-A: Add "restriction_status" field to User table (values: NONE, REQUESTED, ACTIVE, LIFTED) (1 point)
+- Task-068-B: Create Article 18 restriction request form in GDPR portal (1 point)
+- Task-068-C: Implement processing suspension logic (block AI queries, maintain audit logs only) (2 points)
+- Task-068-D: Add DPO approval workflow for restriction requests (1 point)
+
+**Requirements Traceability**: NFR-C-001 (GDPR Article 18: Right to restriction of processing)
+**Component**: GDPR Portal, User Service, Audit Service
+**Priority**: Must Have (NON-NEGOTIABLE - DPIA risk DPIA-007 mitigation)
+**Dependencies**: STORY-064 (GDPR Data Subject Rights Portal must exist)
+
+**Business Context**: DPIA identified DPIA-007 as HIGH risk: "Inadequate data subject rights mechanisms (Article 18 not implemented)". This story resolves that gap and ensures full UK GDPR Article 15-20 compliance before Private Beta launch.
+
 ---
 
 ## Appendix A: Requirements Traceability Matrix
@@ -554,7 +584,7 @@ Due to space constraints, detailed sprint plans for Sprints 5-26 are available u
 | **NFR-SEC-002** | Non-Functional | STORY-003 | 2 | Planned | Authorization (RBAC) |
 | **NFR-SEC-003** | Non-Functional | STORY-011, STORY-057 | 1-2 | Planned | Encryption (TLS 1.3, AES-256) |
 | **NFR-SEC-006** | Non-Functional | STORY-009, STORY-010, STORY-011, STORY-012 | 1-3 | Planned | Multi-Tenant Isolation |
-| **NFR-C-001** | Non-Functional | STORY-064, STORY-065 | 4 | Planned | GDPR Compliance |
+| **NFR-C-001** | Non-Functional | STORY-064, STORY-065, STORY-068 | 4, 10 | Planned | GDPR Compliance (Article 18 added Sprint 10) |
 | **NFR-C-002** | Non-Functional | STORY-034 | 7 | Planned | Audit Logging (7-year retention) |
 | **NFR-C-004** | Non-Functional | EPIC-004 (11 stories) | 7-12 | Planned | AI Playbook Compliance |
 | **NFR-C-005** | Non-Functional | STORY-041, STORY-042, STORY-043 | 11-12 | Planned | ATRS Publication |
@@ -719,8 +749,8 @@ Private Beta Gate (Month 6 / Sprint 13)
 | EPIC-004 | Responsible AI & Governance | 95 | 0 | 95 | 0% | Not Started |
 | EPIC-005 | Integration & Data Management | 82 | 0 | 82 | 0% | Not Started |
 | EPIC-006 | Platform Infrastructure & DevOps | 45 | 0 | 45 | 0% | Not Started |
-| EPIC-007 | Compliance & Regulatory | 26 | 0 | 26 | 0% | Not Started |
-| **TOTAL** | | **524** | **0** | **524** | **0%** | **Not Started** |
+| EPIC-007 | Compliance & Regulatory | 31 | 0 | 31 | 0% | Not Started |
+| **TOTAL** | | **529** | **0** | **529** | **0%** | **Not Started** |
 
 **Note**: Update this table after each sprint based on completed stories. Velocity will be calibrated after Sprint 1-2 to adjust future sprint loading.
 

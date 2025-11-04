@@ -1556,7 +1556,12 @@ The Cabinet Office has been tasked by Ministers to deliver a **centralized, secu
 **Applicable Regulations**: UK GDPR, Data Protection Act 2018, ICO guidance
 
 **Compliance Requirements**:
-- [x] Data subject rights (access, deletion, portability, rectification) - self-service portal for users
+- [x] Data subject rights (access, deletion, portability, rectification, restriction of processing) - self-service portal for users
+  - Article 15: Right of access (Subject Access Request - SAR)
+  - Article 16: Right to rectification
+  - Article 17: Right to erasure (deletion)
+  - Article 18: Right to restriction of processing (suspend processing while accuracy/lawfulness disputed)
+  - Article 20: Right to data portability
 - [x] Consent management and audit trail - explicit consent for data processing, logged in audit trail
 - [x] Privacy by design and by default - data minimization, purpose limitation
 - [x] Data breach notification within **72 hours** to ICO and affected users
